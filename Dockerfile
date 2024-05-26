@@ -2,34 +2,37 @@
 FROM python:3.12
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /srv/www/mysite
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the entire project into the container
+COPY . /srv/www/mysite/
 
 # Copy the requirements file into the container
-COPY requirements.txt requirements.txt
+#COPY requirements.txt requirements.txt
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /srv/www/mysite
-COPY . .
+#COPY . .
 
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
 # Define environment variable
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # Run the application
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myapp.wsgi:application"]
 
 
 # Install Gunicorn
-RUN pip install gunicorn
+#RUN pip install gunicorn
+
+# Install Django
+RUN pip install django
 
 # Start Gunicorn with our application
 CMD ["gunicorn", "-c", "gunicorn_config.py", "mysite.wsgi:application"]
-
